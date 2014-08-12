@@ -1,0 +1,76 @@
+*** define symbol learning ***
+    <<< define definition detectors >>>
+    <<< define learn_from >>>
+!!!
+
+*** define definition detectors ***
+def is_def_begin(line):
+    line = line.strip()
+    return (len(line) > 3) and (line[:3] == "***")
+def is_def_end(line):
+    return line.strip() == "!!!"
+!!!
+
+*** define learn_from ***
+def learn_from(literate):
+    generated = ""
+
+    current_id = None
+    <<< initialize whitespace records >>>
+    for line in literate.split('\n'):
+        <<< skip blank lines >>>
+        if is_def_begin(line):
+            <<< start definition >>>
+        elif is_def_end(line):
+            <<< end definition >>>
+        else:
+            if current_id:
+                <<< grow definition >>>
+            else:
+                <<< grow generated plaintext >>>
+                
+    return generated
+!!!
+
+
+
+*** start definition ***
+    current_id = line.split("***")[1]
+    <<< set once==True iff uniqueness-marker ("!") >>>
+    current_id = current_id.strip()
+    make(current_id, once)
+    <<< prepare to capture first(next) line's whitespace >>>
+!!!
+*** end definition ***
+    current_id = None
+!!!
+*** grow definition ***
+    <<< capture first line's whitespace >>>
+    add(current_id, bump_down(line, def_whitespace))
+!!!
+*** grow generated plaintext ***
+    generated += line+'\n'
+!!!
+
+
+
+*** set once==True iff uniqueness-marker ("!") ***
+    once = False
+    if current_id and current_id[0] == '!':
+        current_id = current_id[1:]
+        once = True
+!!!
+
+
+*** initialize whitespace records ***
+    def_whitespace = ""
+    on_def_first_line = False
+!!!
+*** prepare to capture first(next) line's whitespace ***
+    on_def_first_line = True
+!!!
+*** capture first line's whitespace ***
+    if on_def_first_line:
+        def_whitespace = whitespace_of(line)
+        on_def_first_line = False
+!!!
