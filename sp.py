@@ -36,16 +36,17 @@ import re
 
 TEST_CODE = \
 '''
-
     <<<declare some integers>>>
     a = b = c = 7;
     <<<do something amazing>>>
 
-
+    *** declare special ***
+        int special;
+    !!!
     *** declare some integers ***
         int a, b, c;
+        <<< declare special >>>
     !!!
-
     *** do something amazing ***
         superfunctionyay(a, b, c);
     !!!
@@ -57,14 +58,12 @@ def define(ident, code):
     if ident not in code_objects:
         code_objects[ident] = code
     else:
-        print("ERROR!")
+        print("ERROR: redefinitions, including of <<<", ident,">>> not allowed!")
 def code_of(ident):
     if ident not in code_objects:
-        print("ERROR!")
-    elif not code_objects[ident]:
-        print("ERROR!")
+        print("ERROR: identifier <<<", ident, ">>> not found.")
     else:
-        return code_objects[ident][:-1] ## to remove last newline.
+        return code_objects[ident].strip() ## to remove last newline.
 def display_code_objects():
     for ident, code in code_objects.items():
         print(ident + ':')
@@ -100,23 +99,28 @@ def learn_from(literate):
     return generated
 
 
-def use(generated):
+def must_translate(generated):
+    return "<<<" in generated
+def translate(generated):
     outsource = ""
 
     alternating = re.split("<<<|>>>", generated) ## multi-deliiter split
     
     in_ident = False
     for i in alternating:
-        if in_ident: ## todo: recurse thru levels (depth-first faster..?)
-            outsource += code_of(i)
+        if in_ident:
+            translation = code_of(i.strip())
+            if must_translate(translation): ## recurse thru levels (depth-first faster..?)
+                translation = translate(translation)
+            outsource += translation
         else:
             outsource += i
         in_ident = not in_ident
     return outsource
-
-
+    
+        
 generated = learn_from(TEST_CODE)
 #display_code_objects()
 print(generated)
-print(use(generated))
+print(translate(generated))
 
