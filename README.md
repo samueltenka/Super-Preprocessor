@@ -27,6 +27,9 @@ See Bootstrap folder for literate rendition of the Super Preprocessor (in Python
 
 SPECS:
 -----
+
+##hey##
+
 Definitions may not nest, but their bodies may contain Uses:
 
     // OK:
@@ -63,12 +66,22 @@ Redefinitions are not allowed:
 Whitespace matters, since we parse line-by-line:
 * "!!!" lines must have nothing else.
 * "<<<" lines must have nothing before them.
-*
-where "nothing" means "only tabs and spaces"
+where "nothing" means "only tabs and spaces".
 
-* Identifiers are stripped
-* ***!
-* s
+But it doesn't matter too much at ends of identifiers:
+
+    *** empty        ***
+    !!!
+    ***! unique empty ***
+    !!!
+    *** !empty ***
+    !!!
+    *** ! empty ***
+    !!!
+    <<<    empty >>>
+    <<<unique empty>>>
+    <<<!empty>>>
+    <<<! empty>>>
 
 Program assumes identifier-closing symbols have no trailing text:
 
