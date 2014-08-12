@@ -1,0 +1,47 @@
+*** define recursive translation ***
+	<<< define use-detectors >>>
+	<<< define translate >>>
+!!!
+
+
+*** define translate ***
+	def translate(generated):
+		outsource = ""
+
+		for line in generated.split('\n'):
+			<<< skip blank lines >>>
+			elif is_use(line):
+				<<< expand use >>>
+			else:
+				<<< grow outsource plaintext >>>
+
+		return outsource
+!!!
+
+
+*** expand use ***
+	<<< parse identifier >>>
+	T = code_of(identifier)
+	<<< recursively translate T >>>
+	outsource += bump_up(T, whitespace_of(line))
+!!!
+*** parse identifier ***
+	identifier = line.replace("<<<", "").replace(">>>", "").strip()
+!!!
+*** recursively translate T ***
+	if must_translate(T): ## depth-first faster, since must_translate is expensive over large chunks
+		T = translate(T)
+!!!
+
+
+*** define use-detectors ***
+	def must_translate(generated):
+		return "<<<" in generated
+	def is_use(line):
+		line = line.strip()
+		return (len(line) > 3) and (line[:3] == "<<<")
+!!!
+*** grow outsource plaintext ***
+	outsource += line+'\n'
+!!!
+
