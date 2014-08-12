@@ -10,11 +10,11 @@ by unravelling definitions. For example, we might DEFINE:
     *** declare some integers ***
         int a, b, c;
     !!!
-
+    
 and later USE it as so:
 
     <<< declare some integers >>>
-
+    
 For include-type stuff, start with:
 
     ***! only do this once***
@@ -25,23 +25,23 @@ EXAMPLE:
 See Bootstrap folder for literate rendition of the Super Preprocessor (in Python).
 
 
-SPECIFICATIONS:
---------------
-Definitions may not nest,
-but their bodies may contain Uses.
+SPECS:
+-----
+Definitions may not nest, but their bodies may contain Uses:
 
-Redefinitions would overwrite, but error checking in "define(ident, code)" prevents that.
-Technically, closing "***" unnecessary;
-code afterward will be overlooked.
-New definitions before "!!!" are OK.
+    // OK:
+    <<< A >>>
+    *** A ***
+        <<< B >>>
+        C
+    !!!
+    *** B ***
+        D
+    !!!
+    
+However, recursion breaks the Super Preprocessor:
 
-Whitespace matters: we parse line-by-line.
-"!!!" lines must have only "!!!" and whitespace
-But identifiers are stripped, so <<<a>>> is like <<< a >>>.
-must be "***!", not "*** !"
-
-Recursion breaks program:
-
+    // Bad:
     <<<A>>>
     *** A ***
         <<< B >>>
@@ -49,3 +49,52 @@ Recursion breaks program:
     *** B ***
         <<< A >>>
     !!!
+
+Redefinitions are not allowed:
+
+    // Bad:
+    *** A ***
+        B
+    !!!
+    *** A ***
+        C
+    !!!
+
+Whitespace matters, since we parse line-by-line:
+* "!!!" lines must have nothing else.
+* "<<<" lines must have nothing before them.
+*
+where "nothing" means "only tabs and spaces"
+
+* Identifiers are stripped
+* ***!
+* s
+
+Program assumes identifier-closing symbols have no trailing text:
+
+    *** after ident. in def., *** rest of line is overlooked
+        <<< but after use, >>>rest of code is pasted in
+    !!!
+
+is equivalent to:
+
+    *** after ident. in def., ***
+        <<< but after use, rest of code is pasted in >>>
+    !!!
+
+Because of ungaurded parsing, closing symbols techically unnecessary:
+
+    *** missing end-asterisks
+        <<< missing end-angles
+        more code
+    *** new definition before end-exclamations
+        ETC.
+
+is equivalent to:
+
+    *** missing end-asterisks ***
+        <<< missing end-angles >>>
+        code
+    !!!
+    *** new definition before end-exclamations ***
+        ETC.
