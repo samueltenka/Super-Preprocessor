@@ -1,0 +1,42 @@
+*** skip blank lines ***
+    if not line:
+        continue
+!!!
+
+
+
+*** define whitespace helper functions ***
+    <<< define whitespace_of >>>
+    <<< define equiv_spaces_of >>>
+    <<< define bump_down >>>
+    <<< define bump_up >>>
+!!!
+
+*** define whitespace_of ***
+def whitespace_of(line):
+    ws_length = len(line) - len(line.lstrip())
+    return line[:ws_length]
+!!!
+*** define equiv_spaces_of ***
+def equiv_spaces_of(whitespace, spaces_per_tab=4):
+    if len(whitespace) == 1:
+        return (spaces_per_tab if whitespace=='\t' else 1)
+    return whitespace.count(' ') + \
+           whitespace.count('\t') * spaces_per_tab
+!!!
+*** define bump_down ***
+def bump_down(line, whitespace):
+    spaces_so_far = 0
+    goal = equiv_spaces_of(whitespace)
+    while line and \
+          (line[0] in ' \t') and \
+          (spaces_so_far < goal):
+        line = line[1:]
+        spaces_so_far += equiv_spaces_of(line[0])
+    return line
+!!!
+*** define bump_up ***
+def bump_up(code, whitespace):
+    if not code: return ""
+    return "".join(whitespace+line+'\n' for line in code.split('\n') if line)
+!!!
