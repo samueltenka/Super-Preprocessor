@@ -69,6 +69,7 @@ where "nothing" means "only tabs and spaces"
 
 So the following in-line symbols are correctly interpreted as non-preprocessor text:
 
+    ## OK excerpts from Bootstrap\sl.ppp, \rt.ppp:
     *** define definition detectors ***
         def is_def_begin(line):
             line = line.strip()
