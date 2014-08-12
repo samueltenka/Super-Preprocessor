@@ -14,7 +14,7 @@ FICKLENESS:
 Definitions may not nest,
 but their bodies may contain Uses.
 
-Redefinitions overwrite.
+Redefinitions would overwrite, but error checking in "define(ident, code)".
 Technically, closing "***" unnecessary;
 code afterward will be overlooked.
 New definitions before "!!!" are OK.
@@ -57,11 +57,19 @@ def define(ident, code):
         code_objects[ident] = code
     else:
         print("ERROR!")
+def code_of(ident):
+    if ident not in code_objects:
+        print("ERROR!")
+    elif not code_objects[ident]:
+        print("ERROR!")
+    else:
+        return code_objects[ident][:-1] ## to remove last newline.
 def display_code_objects():
     for ident, code in code_objects.items():
         print(ident + ':')
         for line in code.split('\n'):
-            print('\t' + line)
+            print('\t' + line, end="")
+        print()
 
 
 def is_def_begin(line):
@@ -71,7 +79,7 @@ def is_def_end(line):
     return line.strip() == "!!!"
 
 def learn_from(literate):
-    generated = "START\n"
+    generated = ""
     progress = 0 ## parsed up to here.
 
     current_id = None
@@ -89,13 +97,34 @@ def learn_from(literate):
             else:
                 generated += line + '\n'
 
-    generated += "END\n"
     return generated
 
 
 def use(generated):
-    pass
+    outsource = ""
+    
+    begins = generated.split("<<<")
+    ends = [beg.split(">>>") for beg in begins]
+    
+    alternating = []
+    for begs in ends:
+        for text in begs:
+            alternating.append(text)
+
+    #print(alternating)
+
+    in_ident = False
+    for i in alternating:
+        if in_ident: ## todo: recurse thru levels (depth-first faster..?)
+            outsource += code_of(i)
+        else:
+            outsource += i
+        in_ident = not in_ident
+    return outsource
 
 
-print(learn_from(TEST_CODE))
-display_code_objects()
+generated = learn_from(TEST_CODE)
+#display_code_objects()
+print(generated)
+print(use(generated))
+
