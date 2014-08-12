@@ -6,8 +6,8 @@ Literate programming, I think:
     !!!
 To use:
     <<< declare stuff >>>
-Starts unravelling at:
-    <<< main >>>
+For include-type stuff, start with:
+    ***! only do this once***
 
 
 FICKLENESS:
@@ -21,8 +21,10 @@ New definitions before "!!!" are OK.
 
 Whitespace matters: we parse line-by-line.
 "!!!" lines must have only "!!!" and whitespace
+But identifiers are stripped, so <<<a>>> is like <<< a >>>.
 
 Recursion breaks program:
+    <<<A>>>
     *** A ***
         <<< B >>>
     !!!
@@ -38,16 +40,28 @@ import re
 code_objects = {}
 def reset():
     code_objects = {}
-def define(ident, code):
-    if ident not in code_objects:
-        code_objects[ident] = code
-    else:
+def make(ident, once=False, occurrences=0):
+    if not ident:
+        print("ERROR: identifiers may not be empty!")
+    elif ident in code_objects:
         print("ERROR: redefinitions, including of <<<", ident,">>> not allowed!")
+    else:
+        code_objects[ident] = ["", once, occurrences]
+def add(ident, line):
+    if ident not in code_objects:
+        print("ERROR: identifier <<<", ident, ">>> not found.")
+    else:
+        code_objects[ident][0] += line + '\n'
 def code_of(ident):
     if ident not in code_objects:
         print("ERROR: identifier <<<", ident, ">>> not found.")
     else:
-        return code_objects[ident].strip() ## to remove last newline.
+        code, once, occurrences = code_objects[ident]
+        if (not once) or (occurrences == 0):
+            code_objects[ident][2] += 1;
+            return code.strip() ## to remove last newline.
+        else: ## already included a "once".
+            return ""
 def display_code_objects():
     for ident, code in code_objects.items():
         print(ident + ':')
@@ -71,12 +85,16 @@ def learn_from(literate):
             pass
         elif is_def_begin(line):
             current_id = line.split("***")[1].strip()
-            code_objects[current_id] = ""
+            once = False
+            if current_id and current_id[0] == '!':
+                current_id = current_id[1:].strip()
+                once = True
+            make(current_id, once)
         elif is_def_end(line):
             current_id = None
         else:
             if current_id:
-                code_objects[current_id] += line.strip() + '\n'
+                add(current_id, line)
             else:
                 generated += line + '\n'
 
@@ -117,5 +135,4 @@ def preprocess(sources, dest):
         
 
 
-preprocess(["source1.ppc",
-            "source2.ppc"], "dest.c")
+preprocess(["source.ppc"], "dest.c")
