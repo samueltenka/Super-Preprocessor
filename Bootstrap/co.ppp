@@ -1,0 +1,65 @@
+*** define code_objects ***
+    code_objects = {}
+    <<< define reset >>>
+    <<< define make >>>
+    <<< define add >>>
+    <<< define code_of >>>
+    <<< define display_code_objects >>>
+!!!
+
+
+
+*** define reset ***
+def reset():
+    code_objects = {}
+!!!
+*** define make ***
+def make(identifier, once=False, occurrences=0):
+    <<< ensure identifier non-empty >>>
+    <<< ensure identifier not already defined >>>
+    code_objects[identifier] = ["", once, occurrences]
+!!!
+*** define add ***
+def add(identifier, line):
+    <<< ensure identifier defined >>>
+    code_objects[identifier][0] += line+'\n'
+!!!
+*** define code_of ***
+def code_of(identifier):
+    <<< ensure identifier defined >>>
+    code, once, occurrences = code_objects[identifier]
+    if (not once) or (occurrences == 0):
+        <<< increment occurences >>>
+        return code
+    else: ## already included a "once".
+        return ""
+!!!
+*** define display_code_objects ***
+def display_code_objects():
+    for identifier, (code, _, _) in code_objects.items():
+        print(identifier + ':')
+        for line in code.split('\n')[:-1]:
+            print('\t.' + line)
+!!!
+
+
+*** increment occurences ***
+    code_objects[identifier][2] += 1
+!!!
+
+
+*** ensure identifier non-empty ***
+    if not identifier:
+        print("ERROR: identifiers may not be empty!")
+        return
+!!!
+*** ensure identifier not already defined ***
+    if identifier in code_objects:
+        print("ERROR: redefinitions, including of <<<", identifier,">>> not allowed!")
+        return
+!!!
+*** ensure identifier defined ***
+    if identifier not in code_objects:
+        print("ERROR: identifier <<<", identifier, ">>> not found.")
+        return
+!!!
