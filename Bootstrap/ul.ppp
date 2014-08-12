@@ -1,0 +1,77 @@
+*** start user loop ***
+while True:
+    <<< collect source/destination info >>>
+    <<< super-preprocess >>>
+!!!
+
+
+
+*** super-preprocess ***
+    preprocess(sources, destination)
+    print("tada!")
+!!!
+
+
+
+*** collect source/destination info ***
+    <<< get destination >>>
+    <<< get sources >>>
+    <<< edit until satisfied >>>
+!!!
+*** get destination ***
+    destination = input("destination: ")
+!!!
+*** get sources ***
+    sources = []
+    s = input("next source: ")
+    while s:
+        sources.append(s)
+        s = input("next source: ")
+!!!
+*** edit until satisfied ***
+    <<< display S/D info; is satisfied? >>>
+    while not satisfied:
+        <<< edit sources, destination >>>
+        <<< display S/D info; is satisfied? >>>
+!!!
+    *** display S/D info; is satisfied? ***
+        print("OK, I'll weave", destination, "from:")
+        for i in range(len(sources)):
+            print('\t' + str(i) + ". " + sources[i])
+        satisfied = (input("satisfied? (y/n) ") == 'y')
+    !!!
+    *** edit sources, destination ***
+        <<< edit destination >>>
+        <<< delete and replace sources >>>
+        <<< add sources >>>
+    !!!
+        *** edit destination ***
+            new_dest = input("correct destination: ")
+            if new_dest:
+                dest = new_dest
+        !!!
+        *** delete and replace sources ***
+            src_index = input("which source to change (#): ")
+            while src_index:
+                correct_src = input("correct source: ")
+                if correct_src:
+                    <<< replace source >>>
+                else:
+                    <<< delete source >>>
+                src_index = input("which source to change (#): ")
+        !!!
+            *** replace source ***
+                sources[int(src_index)] = correct_src
+                print("replaced.")
+            !!!
+            *** delete source ***
+                del sources[int(src_index)]
+                print("deleted.")
+            !!!
+        *** add sources ***
+            new_source = input("source to add: ")
+            while new_source:
+                sources.append(new_source)
+                new_source = input("source to add: ")
+        !!!
+    
