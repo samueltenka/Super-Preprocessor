@@ -36,6 +36,8 @@ import re
 
 
 code_objects = {}
+def reset():
+    code_objects = {}
 def define(ident, code):
     if ident not in code_objects:
         code_objects[ident] = code
@@ -101,13 +103,19 @@ def translate(generated):
     return outsource
 
 
-def preprocess(source, dest):
-    prepreprocessed = open(source, mode='r').read()
-    #print(prepreprocessed)
-    preprocessed = translate(learn_from(prepreprocessed))
-    #print(preprocessed)
-    open(dest, mode='w').write(preprocessed)
+def preprocess(sources, dest):
+    reset()
+    generateds = []
+    for s in sources:
+        pps = open(s, mode='r').read()
+        generateds.append(learn_from(pps))
+
+    out = ""
+    for g in generateds:
+        out += translate(g)
+    open(dest, mode='w').write(out)
         
 
 
-preprocess("source.ppc", "dest.c")
+preprocess(["source1.ppc",
+            "source2.ppc"], "dest.c")
