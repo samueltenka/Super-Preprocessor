@@ -65,7 +65,20 @@ Redefinitions are not allowed:
 Whitespace matters, since we parse line-by-line:
 * "!!!" lines must have nothing else.
 * "<<<" lines must have nothing before them.
-where "nothing" means "only tabs and spaces".
+where "nothing" means "only tabs and spaces"
+
+So the following in-line symbols are correctly interpreted as non-preprocessor text:
+
+    *** define definition detectors ***
+        def is_def_begin(line):
+            line = line.strip()
+            return (len(line) > 3) and (line[:3] == "***")
+        def is_def_end(line):
+            return line.strip() == "!!!"
+    !!!
+    *** parse identifier ***
+        identifier = line.replace("<<<", "").replace(">>>", "").strip()
+    !!!
 
 But it doesn't matter too much at identifiers' edges:
 
