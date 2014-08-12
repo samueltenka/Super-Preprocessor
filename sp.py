@@ -34,24 +34,6 @@ Recursion breaks program:
 import re
 
 
-TEST_CODE = \
-'''
-    <<<declare some integers>>>
-    a = b = c = 7;
-    <<<do something amazing>>>
-
-    *** declare special ***
-        int special;
-    !!!
-    *** declare some integers ***
-        int a, b, c;
-        <<< declare special >>>
-    !!!
-    *** do something amazing ***
-        superfunctionyay(a, b, c);
-    !!!
-'''
-
 
 code_objects = {}
 def define(ident, code):
@@ -117,10 +99,15 @@ def translate(generated):
             outsource += i
         in_ident = not in_ident
     return outsource
-    
-        
-generated = learn_from(TEST_CODE)
-#display_code_objects()
-print(generated)
-print(translate(generated))
 
+
+def preprocess(source, dest):
+    prepreprocessed = open(source, mode='r').read()
+    #print(prepreprocessed)
+    preprocessed = translate(learn_from(prepreprocessed))
+    #print(preprocessed)
+    open(dest, mode='w').write(preprocessed)
+        
+
+
+preprocess("source.ppc", "dest.c")
