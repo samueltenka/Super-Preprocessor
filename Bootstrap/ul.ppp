@@ -15,11 +15,25 @@ while True:
 
 *** collect source/destination info ***
     <<< get destination >>>
-    <<< get sources >>>
-    <<< edit until satisfied >>>
+    if len(destination)>11 and destination[-11:] == "hitlist.txt":
+        <<< weave from hitlist >>>
+    else:
+        <<< get sources >>>
+        <<< edit until satisfied >>>
 !!!
 *** get destination ***
     destination = input("destination: ")
+!!!
+*** weave from hitlist ***
+    hitlist = open(destination, mode='r')
+    files = []
+    for line in hitlist:
+        l = line.strip()
+        if l:
+            files.append(l)
+    hitlist.close()
+	
+	destination, sources = files[0], files[1:]
 !!!
 *** get sources ***
     sources = []
