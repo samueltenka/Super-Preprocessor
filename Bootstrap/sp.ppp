@@ -1,0 +1,17 @@
+***! Super-Processor ***
+    <<< define code_objects >>>
+    <<< define whitespace helper functions >>>
+    <<< define symbol learning >>>
+    <<< define recursive translation >>>
+    <<< define fileIO wrapper >>>
+!!!
+
+<<< Super-Processor >>>
+
+
+preprocess(["Bootstrap\\sp.ppp",
+            "Bootstrap\\co.ppp",
+            "Bootstrap\\ws.ppp",
+            "Bootstrap\\sl.ppp",
+            "Bootstrap\\rt.ppp",
+            "Bootstrap\\io.ppp"], "sp.py")
