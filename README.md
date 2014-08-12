@@ -30,7 +30,7 @@ SPECIFICATIONS:
 Definitions may not nest,
 but their bodies may contain Uses.
 
-Redefinitions would overwrite, but error checking in "define(ident, code)".
+Redefinitions would overwrite, but error checking in "define(ident, code)" prevents that.
 Technically, closing "***" unnecessary;
 code afterward will be overlooked.
 New definitions before "!!!" are OK.
@@ -41,6 +41,7 @@ But identifiers are stripped, so <<<a>>> is like <<< a >>>.
 must be "***!", not "*** !"
 
 Recursion breaks program:
+
     <<<A>>>
     *** A ***
         <<< B >>>
