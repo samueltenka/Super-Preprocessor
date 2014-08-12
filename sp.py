@@ -31,6 +31,7 @@ Recursion breaks program:
     !!!
 '''
 
+import re
 
 
 TEST_CODE = \
@@ -80,11 +81,10 @@ def is_def_end(line):
 
 def learn_from(literate):
     generated = ""
-    progress = 0 ## parsed up to here.
 
     current_id = None
     for line in literate.split('\n'):
-        if not line: ## get rid of whitespace
+        if not line: ## get rid of blank lines
             pass
         elif is_def_begin(line):
             current_id = line.split("***")[1].strip()
@@ -102,17 +102,9 @@ def learn_from(literate):
 
 def use(generated):
     outsource = ""
-    
-    begins = generated.split("<<<")
-    ends = [beg.split(">>>") for beg in begins]
-    
-    alternating = []
-    for begs in ends:
-        for text in begs:
-            alternating.append(text)
 
-    #print(alternating)
-
+    alternating = re.split("<<<|>>>", generated) ## multi-deliiter split
+    
     in_ident = False
     for i in alternating:
         if in_ident: ## todo: recurse thru levels (depth-first faster..?)
