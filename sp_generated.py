@@ -43,8 +43,8 @@ def bump_down(line, whitespace):
     while line and \
           (line[0] in ' \t') and \
           (spaces_so_far < goal):
-        line = line[1:]
         spaces_so_far += equiv_spaces_of(line[0])
+        line = line[1:]
     return line
 def bump_up(code, whitespace):
     if not code: return ""
@@ -106,18 +106,48 @@ def preprocess(sources, dest):
     reset()
     generateds = []
     for s in sources:
-        pps = open(s, mode='r').read()
-        generateds.append(learn_from(pps))
+    	pps = open(s, mode='r').read()
+    	generateds.append(learn_from(pps))
     display_code_objects()
     f = open(dest, mode='w')
     f.write("")
     f.close()
     dest_file = open(dest, mode='a')
     for g in generateds:
-        dest_file.write(translate(g))
-preprocess(["Bootstrap\\sp.ppp",
-            "Bootstrap\\co.ppp",
-            "Bootstrap\\ws.ppp",
-            "Bootstrap\\sl.ppp",
-            "Bootstrap\\rt.ppp",
-            "Bootstrap\\io.ppp"], "sp.py")
+    	dest_file.write(translate(g))
+while True:
+    destination = input("destination: ")
+    sources = []
+    s = input("next source: ")
+    while s:
+        sources.append(s)
+        s = input("next source: ")
+    print("OK, I'll weave", destination, "from:")
+    for i in range(len(sources)):
+        print('\t' + str(i) + ". " + sources[i])
+    satisfied = (input("satisfied? (y/n) ") == 'y')
+    while not satisfied:
+        new_dest = input("correct destination: ")
+        if new_dest:
+            dest = new_dest
+        src_index = input("which source to change (#): ")
+        while src_index:
+            correct_src = input("correct source: ")
+            if correct_src:
+                sources[int(src_index)] = correct_src
+                print("replaced.")
+            else:
+                del sources[int(src_index)]
+                print("deleted.")
+            src_index = input("which source to change (#): ")
+        new_source = input("source to add: ")
+        while new_source:
+            sources.append(new_source)
+            new_source = input("source to add: ")
+        print("OK, I'll weave", destination, "from:")
+        for i in range(len(sources)):
+            print('\t' + str(i) + ". " + sources[i])
+        satisfied = (input("satisfied? (y/n) ") == 'y')
+    preprocess(sources, destination)
+    print("tada!")
+    
