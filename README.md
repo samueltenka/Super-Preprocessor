@@ -28,7 +28,7 @@ See Bootstrap folder for literate rendition of the Super Preprocessor (in Python
 SPECS:
 -----
 
-##hey##
+###Nesting###
 
 Definitions may not nest, but their bodies may contain Uses:
 
