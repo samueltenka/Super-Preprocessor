@@ -6,13 +6,17 @@ ABOUT:
 -----
 Helps with literate programming (at least I __think__ it's called "literate")
 by unravelling definitions. For example, we might DEFINE:
+
     *** declare some integers ***
         int a, b, c;
     !!!
+
 and later USE it as so:
+
     <<< declare some integers >>>
 
 For include-type stuff, start with:
+
     ***! only do this once***
 
 
