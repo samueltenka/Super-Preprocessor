@@ -3,17 +3,26 @@ Super-Preprocessor
 
 
 ABOUT:
-Literate programming, I think:
-    ***declare some integers***
+-----
+Helps with literate programming (at least I __think__ it's called "literate")
+by unravelling definitions. For example, we might DEFINE:
+    *** declare some integers ***
         int a, b, c;
     !!!
-To use:
-    <<< declare stuff >>>
+and later USE it as so:
+    <<< declare some integers >>>
+
 For include-type stuff, start with:
     ***! only do this once***
 
 
-FICKLENESS:
+EXAMPLE:
+-------
+See Bootstrap folder for literate rendition of the Super Preprocessor (in Python).
+
+
+SPECIFICATIONS:
+--------------
 Definitions may not nest,
 but their bodies may contain Uses.
 
