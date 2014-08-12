@@ -27,9 +27,7 @@ See Bootstrap folder for literate rendition of the Super Preprocessor (in Python
 
 SPECS:
 -----
-
 ###Nesting###
-
 Definitions may not nest, but their bodies may contain Uses:
 
     // OK:
@@ -63,13 +61,15 @@ Redefinitions are not allowed:
         C
     !!!
 
+###Whitespace###
 Whitespace matters, since we parse line-by-line:
 * "!!!" lines must have nothing else.
 * "<<<" lines must have nothing before them.
 where "nothing" means "only tabs and spaces".
 
-But it doesn't matter too much at ends of identifiers:
+But it doesn't matter too much at identifiers' edges:
 
+    // four different OK def.s/uses of those def.s:
     *** empty        ***
     !!!
     ***! unique empty ***
@@ -83,6 +83,7 @@ But it doesn't matter too much at ends of identifiers:
     <<<!empty>>>
     <<<! empty>>>
 
+###Parsing after Delimiters###
 Program assumes identifier-closing symbols have no trailing text:
 
     *** after ident. in def., *** rest of line is overlooked
