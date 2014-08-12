@@ -40,8 +40,8 @@ def bump_down(line, whitespace):
     while line and \
           (line[0] in ' \t') and \
           (spaces_so_far < goal):
-        line = line[1:]
         spaces_so_far += equiv_spaces_of(line[0])
+        line = line[1:]
     return line
 
 
@@ -130,4 +130,5 @@ preprocess(["Bootstrap\\sp.ppp",
             "Bootstrap\\ws.ppp",
             "Bootstrap\\sl.ppp",
             "Bootstrap\\rt.ppp",
-            "Bootstrap\\io.ppp"], "sp2.py")
+            "Bootstrap\\io.ppp",
+            "Bootstrap\\ul.ppp"], "sp3.py")
