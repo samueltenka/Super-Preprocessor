@@ -1,0 +1,27 @@
+*** define fileIO wrapper ***
+def preprocess(sources, dest):
+    reset()
+    generateds = []
+    <<< learn symbols from sources; remove definitions from code >>>
+    display_code_objects()
+    <<< translate code to destination >>>
+!!!
+
+*** learn symbols from sources; remove definitions from code ***
+    for s in sources:
+        pps = open(s, mode='r').read()
+        generateds.append(learn_from(pps))
+!!!
+*** translate code to destination ***
+    <<< clear destination file >>>
+    dest_file = open(dest, mode='a')
+    for g in generateds:
+        dest_file.write(translate(g))
+!!!
+
+
+*** clear destination file ***
+    f = open(dest, mode='w')
+    f.write("")
+    f.close()
+!!!
