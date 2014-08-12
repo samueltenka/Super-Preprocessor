@@ -69,7 +69,8 @@ where "nothing" means "only tabs and spaces".
 
 But it doesn't matter too much at identifiers' edges:
 
-    // four different OK def.s/uses of those def.s:
+    // four different def.s/uses of those def.s,
+    // all OK:
     *** empty        ***
     !!!
     ***! unique empty ***
