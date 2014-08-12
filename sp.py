@@ -26,6 +26,23 @@ def display_code_objects():
             print('\t.' + line)
 
 
+def whitespace_of(line):
+    ws_length = len(line) - len(line.lstrip())
+    return line[:ws_length]
+def equiv_spaces_of(whitespace, spaces_per_tab=4):
+    if len(whitespace) == 1:
+        return (spaces_per_tab if whitespace=='\t' else 1)
+    return whitespace.count(' ') + \
+           whitespace.count('\t') * spaces_per_tab
+def bump_down(line, whitespace):
+    spaces_so_far = 0
+    goal = equiv_spaces_of(whitespace)
+    while line and \
+          (line[0] in ' \t') and \
+          (spaces_so_far < goal):
+        line = line[1:]
+        spaces_so_far += equiv_spaces_of(line[0])
+    return line
 
 
 def is_def_begin(line):
@@ -37,6 +54,8 @@ def learn_from(literate):
     generated = ""
 
     current_id = None
+    def_whitespace = ""
+    on_def_first_line = False
     for line in literate.split('\n'):
         if not line: ## get rid of blank lines
             pass
@@ -48,11 +67,15 @@ def learn_from(literate):
                 once = True
             current_id = current_id.strip()
             make(current_id, once)
+            on_def_first_line = True
         elif is_def_end(line):
             current_id = None
         else:
             if current_id:
-                add(current_id, line)
+                if on_def_first_line:
+                    def_whitespace = whitespace_of(line)
+                    on_def_first_line = False
+                add(current_id, bump_down(line, def_whitespace))
             else:
                 generated += line+'\n'
 
@@ -66,9 +89,6 @@ def must_translate(generated):
 def is_use(line):
     line = line.strip()
     return (len(line) > 3) and (line[:3] == "<<<")
-def whitespace_of(line):
-    ws_length = len(line) - len(line.lstrip())
-    return line[:ws_length]
 def bump_up(code, whitespace):
     if not code: return ""
     return "".join(whitespace+line+'\n' for line in code.split('\n') if line)
@@ -105,5 +125,8 @@ def preprocess(sources, dest):
         
 
 
-preprocess(["source.ppc"], "dest.c")
+preprocess(["List\\List.ppc",
+            "List\\LNode.ppc",
+            "List\\ListOutline.ppc",
+            "List\\LIterator.ppc"], "dest.c")
 
