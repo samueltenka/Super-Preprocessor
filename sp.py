@@ -117,7 +117,7 @@ def preprocess(sources, dest):
         generateds.append(learn_from(pps))
 
     display_code_objects()
-    
+
     out = ""
     for g in generateds:
         out += translate(g)
@@ -125,8 +125,9 @@ def preprocess(sources, dest):
         
 
 
-preprocess(["List\\List.ppc",
-            "List\\LNode.ppc",
-            "List\\ListOutline.ppc",
-            "List\\LIterator.ppc"], "dest.c")
-
+preprocess(["Bootstrap\\sp.ppp",
+            "Bootstrap\\co.ppp",
+            "Bootstrap\\ws.ppp",
+            "Bootstrap\\sl.ppp",
+            "Bootstrap\\rt.ppp",
+            "Bootstrap\\io.ppp"], "sp2.py")
